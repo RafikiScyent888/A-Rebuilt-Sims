@@ -73,6 +73,9 @@
         <div class="item" draggable="true" ondragstart="drag(event)" id="Printer">Printer</div>
         <div class="item" draggable="true" ondragstart="drag(event)" id="Scanner">Scanner</div>
         <div class="item" draggable="true" ondragstart="drag(event)" id="Wi-Fi Router">Wi-Fi Router</div>
+        <div class="item" draggable="true" ondragstart="drag(event)" id="Fan">Fan</div>
+        <div class="item" draggable="true" ondragstart="drag(event)" id="Lamp">Lamp</div>
+        <div class="item" draggable="true" ondragstart="drag(event)" id="Clock/Radio">Clock/Radio</div>
       </div>
     </div>
   </div>
@@ -102,13 +105,14 @@
     }
 
     function submitAnswers() {
+      const correctWallDevices = ["Fan", "Lamp", "Clock/Radio"];
       const correctSurgeDevices = ["Printer", "Scanner"];
       const correctUPSDevices = ["Cable Modem", "Computer", "Monitor", "Wi-Fi Router"];
       const surgeSource = document.getElementById("surgeSource").value;
       const upsSource = document.getElementById("upsSource").value;
 
       let score = 0;
-      let total = 8;
+      let total = 11;
 
       // Check dropdowns
       if (surgeSource === "Wall Outlet") {
@@ -118,12 +122,28 @@
         document.getElementById("surgeSource").classList.add("incorrect");
       }
 
-      if (upsSource === "Wall Outlet") {
+      if (upsSource === "Surge Protector") {
         score++;
         document.getElementById("upsSource").classList.remove("incorrect");
       } else {
         document.getElementById("upsSource").classList.add("incorrect");
       }
+
+      // Evaluate Wall Outlet
+      let wallItems = [];
+      for (let i = 1; i <= 6; i++) {
+        const item = document.getElementById(`wallOutlet${i}`).firstElementChild;
+        if (item) wallItems.push(item);
+      }
+
+      wallItems.forEach(el => {
+        if (correctWallDevices.includes(el.id)) {
+          el.classList.remove("incorrect");
+          score++;
+        } else {
+          el.classList.add("incorrect");
+        }
+      });
 
       // Evaluate Surge Protector
       let surgeItems = [];
